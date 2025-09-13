@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Quant Analytics Service"
     VERSION: str = "1.0.0"
     DEBUG: bool = False
-    API_V1_STR: str = "/api/v1"
+    API_V1_STR: str
     
     # Database
     DATABASE_URL: str
@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     
     # Cache
-    REDIS_URL: str = "redis://localhost:6379/1"
+    REDIS_URL: str
     CACHE_TTL: int = 300
     
     # Performance

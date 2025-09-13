@@ -313,9 +313,6 @@ class MarketDataService:
     async def close(self):
         # tvDatafeed does not require explicit close, but keep method for symmetry
         return
------------------------------
-Self-test
------------------------------
 
 async def _self_test():
     svc = MarketDataService()

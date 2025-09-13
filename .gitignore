@@ -63,3 +63,6 @@ logs/
 
 -H
 -d
+postgres-init/
+discards/
+*logs*

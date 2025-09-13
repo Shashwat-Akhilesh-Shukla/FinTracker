@@ -1,15 +1,14 @@
-version: "1.0"
-
 services:
   postgres:
     image: postgres:15
     restart: unless-stopped
     environment:
       POSTGRES_USER: fintracker
-      POSTGRES_PASSWORD: fintracker_pass
+      POSTGRES_PASSWORD: fintracker123
       POSTGRES_DB: fintracker
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
 
@@ -20,38 +19,34 @@ services:
       - "6379:6379"
 
   # API Gateway
-  api-gateway:
-  build:
-    context: ./backend/api-gateway
-    dockerfile: Dockerfile
-  env_file:
-    - ./backend/api-gateway/.env
-  environment:
-    # Override service URLs for Docker
-    AUTH_SERVICE_URL: http://auth-service:8001
-    PORTFOLIO_SERVICE_URL: http://portfolio-service:8002
-    NEWS_SERVICE_URL: http://news-service:8003
-    QUANT_SERVICE_URL: http://quant-service:8004
-    # Expose the port to the app (uvicorn)
-    PORT: 8000
-  ports:
-    - "8000:8000"
-  depends_on:
-    - auth-service
-    - portfolio-service
-    - news-service
-    - quant-service
-    - postgres
-    - redis
-  restart: on-failure
-
-
-  auth-service:
+  api_gateway:
     build:
-      context: ./backend/auth-service
+      context: ./backend/api_gateway
+      dockerfile: Dockerfile
+    environment:
+      # Override service URLs for Docker
+      AUTH_SERVICE_URL: http://auth_service:8001
+      PORTFOLIO_SERVICE_URL: http://portfolio_service:8002
+      NEWS_SERVICE_URL: http://news_service:8003
+      QUANT_SERVICE_URL: http://quant_service:8004
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth_service
+      - portfolio_service
+      - news_service
+      - quant_service
+      - postgres
+      - redis
+    restart: on-failure
+
+  auth_service:
+    build:
+      context: ./backend/auth_service
       dockerfile: Dockerfile
     env_file:
-      - ./backend/auth-service/.env
+      - ./backend/auth_service/.env
     ports:
       - "8001:8001"
     depends_on:
@@ -59,14 +54,14 @@ services:
       - redis
     restart: on-failure
 
-  portfolio-service:
+  portfolio_service:
     build:
-      context: ./backend/portfolio-service
+      context: ./backend/portfolio_service
       dockerfile: Dockerfile
       args:
         PORT: 8002
     env_file:
-      - ./backend/portfolio-service/.env
+      - ./backend/portfolio_service/.env
     ports:
       - "8002:8002"
     depends_on:
@@ -74,28 +69,26 @@ services:
       - redis
     restart: on-failure
 
-  news-service:
+  news_service:
     build:
-      context: ./backend/news-service
+      context: ./backend/news_service
       dockerfile: Dockerfile
       args:
         PORT: 8003
     env_file:
-      - ./backend/news-service/.env
+      - ./backend/news_service/.env
     ports:
       - "8003:8003"
     depends_on:
       - postgres
     restart: on-failure
 
-  quant-service:
+  quant_service:
     build:
-      context: ./backend/quant-service
+      context: ./backend/quant_service
       dockerfile: Dockerfile
-      args:
-        PORT: 8004
     env_file:
-      - ./backend/quant-service/.env
+      - ./backend/quant_service/.env
     ports:
       - "8004:8004"
     depends_on:
@@ -110,9 +103,9 @@ services:
     env_file:
       - ./frontend/.env
     ports:
-      - "3000:80"   # built frontend served on container port 80; host uses 3000 to match your dev habit
+      - "3000:80"
     depends_on:
-      - api-gateway
+      - api_gateway
     restart: on-failure
 
 volumes:

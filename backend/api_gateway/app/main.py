@@ -6,10 +6,14 @@ import httpx
 import os
 
 app = FastAPI(title="FinTracker API Gateway", version="1.0.0")
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,10 +23,10 @@ def get_service_url(name: str, default: str) -> str:
     return os.getenv(f"{name.upper()}_SERVICE_URL", default)
 
 SERVICES = {
-    "auth": get_service_url("auth", "http://localhost:8001"),
-    "portfolio": get_service_url("portfolio", "http://localhost:8002"),
-    "news": get_service_url("news", "http://localhost:8003"),
-    "quant": get_service_url("quant", "http://localhost:8004"),
+    "auth": get_service_url("AUTH", "http://localhost:8001"),
+    "portfolio": get_service_url("PORTFOLIO", "http://localhost:8002"),
+    "news": get_service_url("NEWS", "http://localhost:8003"),
+    "quant": get_service_url("QUANT", "http://localhost:8004"),
 }
 
 
