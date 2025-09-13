@@ -1,4 +1,4 @@
-# FinTracker Pro: Enterprise-Grade Financial Portfolio Management Platform
+# FinTracker: Enterprise-Grade Financial Portfolio Management Platform
 
 <div align="center">
 
