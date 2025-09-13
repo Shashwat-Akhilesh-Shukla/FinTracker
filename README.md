@@ -1,4 +1,4 @@
-# FinTracker Pro: Enterprise-Grade Financial Portfolio Management Platform
+# FinTracker: Enterprise-Grade Financial Portfolio Management Platform
 
 <div align="center">
 
@@ -6,10 +6,12 @@
 </div>
 
 ***
+<img width="661" height="800" alt="image" src="https://github.com/user-attachments/assets/1068677b-6754-4454-8924-3f0a5cf07973" />
+
 
 ## 🎯 Overview
 
-FinTracker Pro is a comprehensive financial portfolio management platform built with modern web technologies and microservices architecture. It provides real-time market data, advanced analytics, AI-powered insights, and intuitive dashboards for investors of all levels.
+FinTracker is a comprehensive financial portfolio management platform built with modern web technologies and microservices architecture. It provides real-time market data, advanced analytics, AI-powered insights, and intuitive dashboards for investors of all levels.
 
 ### ✨ Key Features
 
@@ -140,7 +142,7 @@ fintracker/
 
 ```bash
 git clone https://github.com/Shashwat-Akhilesh-Shukla/FINTRACKER.git
-cd fintracker-pro
+cd fintracker
 ```
 
 ### 2. Environment Setup
@@ -149,9 +151,9 @@ Create `.env` files for each service:
 
 ```bash
 # Backend environment files
-cp backend/auth-service/.env.example backend/auth-service/.env
-cp backend/portfolio-service/.env.example backend/portfolio-service/.env
-cp backend/news-service/.env.example backend/news-service/.env
+cp backend/auth-service/.env backend/auth-service/.env
+cp backend/portfolio-service/.env backend/portfolio-service/.env
+cp backend/news-service/.env backend/news-service/.env
 
 # Frontend environment file
 cp frontend/.env.example frontend/.env
@@ -260,9 +262,6 @@ pip install -r requirements.txt
 createdb fintracker_auth
 createdb fintracker_portfolio
 createdb fintracker_news
-
-# Run migrations
-alembic upgrade head
 ```
 
 3. **Frontend development:**
@@ -281,22 +280,6 @@ Each microservice follows FastAPI best practices:
 - **SQLAlchemy 2.0** with async sessions
 - **Comprehensive error handling** with custom exceptions
 - **Request/response middleware** for logging and metrics
-
-### Testing
-
-```bash
-# Backend tests
-pytest backend/auth-service/tests/
-pytest backend/portfolio-service/tests/
-pytest backend/news-service/tests/
-
-# Frontend tests
-cd frontend
-npm run test
-npm run test:coverage
-```
-
-***
 
 ## 📘 API Reference
 
