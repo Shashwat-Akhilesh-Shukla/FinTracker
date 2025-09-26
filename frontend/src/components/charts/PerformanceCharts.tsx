@@ -29,6 +29,7 @@ import { usePortfolioHistory } from '../../hooks/usePortfolioHistory';
 import { portfolioService } from '../../services/portfolioService';
 import { APP_CONFIG } from '../../constants/config';
 import { useQuery } from 'react-query';
+import { Holding } from '../../types/portfolio';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d', '#ffc658', '#8884d8', '#ff7300', '#413ea0'];
 
@@ -54,11 +55,11 @@ const PerformanceCharts: React.FC = () => {
 
     const allocationMap = new Map<string, number>();
 
-    holdings.forEach(holding => {
+    holdings.forEach((holding: Holding) => {
       const category = showIndustry ? holding.industry : holding.sector;
       if (category) {
         const currentValue = allocationMap.get(category) || 0;
-        allocationMap.set(category, currentValue + holding.marketValue);
+        allocationMap.set(category, currentValue + holding.market_value);
       }
     });
 
@@ -137,6 +138,17 @@ const PerformanceCharts: React.FC = () => {
     }
 
     const allocationData = calculateAllocationData();
+
+    if (!allocationData.length) {
+      return (
+        <Box display="flex" justifyContent="center" alignItems="center" height={400}>
+          <Alert severity="info">
+            No {showIndustry ? 'industry' : 'sector'} allocation data available. 
+            Ensure your holdings have sector/industry information.
+          </Alert>
+        </Box>
+      );
+    }
 
     return (
       <ResponsiveContainer width="100%" height={400}>
