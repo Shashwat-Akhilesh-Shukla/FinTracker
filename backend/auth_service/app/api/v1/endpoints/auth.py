@@ -18,12 +18,25 @@ router = APIRouter()
 
 @router.post("/login", response_model=TokenResponse)
 def login(
+    response: Response,
     login_data: LoginRequest,
     db: Session = Depends(get_db)
 ):
     """Authenticate user and return JWT tokens"""
     auth_service = AuthService(db)
-    return auth_service.login(login_data)
+    tokens = auth_service.login(login_data)
+    
+    # Set refresh token in HTTP-only cookie
+    response.set_cookie(
+        key="refresh_token",
+        value=tokens.refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 30  # 30 days
+    )
+    
+    return tokens
 
 @router.post("/register", response_model=TokenResponse)
 def register(

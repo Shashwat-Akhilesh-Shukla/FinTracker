@@ -32,16 +32,17 @@ export const portfolioService = {
         symbol: holding.symbol,
         name: holding.name,
         shares: holding.shares,
-        avgCost: holding.avg_cost,
-        currentPrice: holding.current_price,
-        marketValue: holding.market_value,
-        dayChange: holding.day_change,
-        dayChangePercent: holding.day_change_percent,
-        totalReturn: holding.total_return,
-        totalReturnPercent: holding.total_return_percent,
+        avg_cost: holding.avg_cost,
+        current_price: holding.current_price,
+        market_value: holding.market_value,
+        day_change: holding.day_change,
+        day_change_percent: holding.day_change_percent,
+        total_return: holding.total_return,
+        total_return_percent: holding.total_return_percent,
+        weight: holding.weight,
         sector: holding.sector,
         industry: holding.industry,
-        lastUpdated: holding.last_updated
+        last_price_update: holding.last_updated
       }));
       
       return holdings;
@@ -51,7 +52,7 @@ export const portfolioService = {
     }
   },
 
-  addHolding: async (data: { symbol: string; shares: number; avgCost: number }) => {
+  addHolding: async (data: { symbol: string; shares: number; avg_cost: number }) => {
     try {
       const response = await apiClient.post(API_ENDPOINTS.PORTFOLIO.HOLDINGS, data);
       return response.data;
@@ -87,9 +88,14 @@ export const portfolioService = {
     }
   },
 
-  updateHolding: async (id: number, data: { shares?: number; avgCost?: number }) => {
+  updateHolding: async (id: number, data: { shares?: number; avg_cost?: number }) => {
     try {
-      const response = await apiClient.put(`${API_ENDPOINTS.PORTFOLIO.HOLDINGS}/${id}`, data);
+      // Map camelCase to snake_case for backend compatibility
+      const payload = {
+        shares: data.shares,
+        avg_cost: data.avg_cost
+      };
+      const response = await apiClient.put(`${API_ENDPOINTS.PORTFOLIO.HOLDINGS}/${id}`, payload);
       return response.data;
     } catch (error: any) {
       handleApiError(error, 'Failed to update holding');

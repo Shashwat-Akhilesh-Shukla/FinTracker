@@ -8,10 +8,12 @@
 
 // src/store/store.ts
 import { configureStore } from '@reduxjs/toolkit';
+import { composeWithDevTools } from '@redux-devtools/extension'
 import { authSlice } from './slices/authSlice';
 import { portfolioSlice } from './slices/portfolioSlice';
 import { marketSlice } from './slices/marketSlice';
 import analyticsReducer from './slices/analyticsSlice';
+import themeReducer from './slices/themeSlice';
 import { apiSlice } from './api/apiSlice';
 
 export const store = configureStore({
@@ -21,6 +23,7 @@ export const store = configureStore({
     market: marketSlice.reducer,
     api: apiSlice.reducer,
     analytics: analyticsReducer,
+    theme: themeReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -28,6 +31,8 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
     }).concat(apiSlice.middleware),
+  
+  devTools: true,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

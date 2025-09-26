@@ -50,20 +50,20 @@ const HoldingsTable: React.FC = () => {
               <TableCell>{holding.symbol}</TableCell>
               <TableCell>{holding.name}</TableCell>
               <TableCell align="right">{holding.shares}</TableCell>
-              <TableCell align="right">{formatCurrency(holding.avgCost)}</TableCell>
-              <TableCell align="right">{formatCurrency(holding.currentPrice)}</TableCell>
-              <TableCell align="right">{formatCurrency(holding.marketValue)}</TableCell>
+              <TableCell align="right">{formatCurrency(holding.avg_cost)}</TableCell>
+              <TableCell align="right">{formatCurrency(holding.current_price)}</TableCell>
+              <TableCell align="right">{formatCurrency(holding.market_value)}</TableCell>
               <TableCell
                 align="right"
-                sx={{ color: holding.dayChange >= 0 ? 'success.main' : 'error.main' }}
+                sx={{ color: holding.day_change >= 0 ? 'success.main' : 'error.main' }}
               >
-                {formatCurrency(holding.dayChange)} ({formatPercentage(holding.dayChangePercent)})
+                {formatCurrency(holding.day_change)} ({formatPercentage(holding.day_change_percent)})
               </TableCell>
               <TableCell
                 align="right"
-                sx={{ color: holding.totalReturn >= 0 ? 'success.main' : 'error.main' }}
+                sx={{ color: holding.total_return >= 0 ? 'success.main' : 'error.main' }}
               >
-                {formatCurrency(holding.totalReturn)} ({formatPercentage(holding.totalReturnPercent)})
+                {formatCurrency(holding.total_return)} ({formatPercentage(holding.total_return_percent)})
               </TableCell>
             </TableRow>
           ))}

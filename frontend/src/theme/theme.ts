@@ -1,8 +1,9 @@
 // src/theme/theme.ts
 import { createTheme } from '@mui/material/styles';
 
-export const theme = createTheme({
+export const getTheme = (mode: 'light' | 'dark') => createTheme({
   palette: {
+    mode,
     primary: {
       main: '#1e3c72',
       light: '#4a69bd',
@@ -20,8 +21,8 @@ export const theme = createTheme({
       main: '#ff4444',
     },
     background: {
-      default: '#f8f9fa',
-      paper: '#ffffff',
+      default: mode === 'light' ? '#f8f9fa' : '#121212',
+      paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
     },
   },
   typography: {
@@ -34,7 +35,7 @@ export const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+          boxShadow: mode === 'light' ? '0 2px 10px rgba(0,0,0,0.1)' : '0 2px 10px rgba(0,0,0,0.3)',
           borderRadius: 12,
         },
       },
@@ -50,3 +51,5 @@ export const theme = createTheme({
     },
   },
 });
+
+export const theme = getTheme('light');

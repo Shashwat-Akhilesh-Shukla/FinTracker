@@ -2,23 +2,23 @@
 import { Holding, PortfolioMetrics } from '../types/portfolio';
 
 export const calculatePortfolioValue = (holdings: Holding[]): number => {
-  return holdings.reduce((total, holding) => total + holding.marketValue, 0);
+  return holdings.reduce((total, holding) => total + holding.market_value, 0);
 };
 
 export const calculatePortfolioReturn = (holdings: Holding[]): number => {
-  return holdings.reduce((total, holding) => total + holding.totalReturn, 0);
+  return holdings.reduce((total, holding) => total + holding.total_return, 0);
 };
 
 export const calculatePortfolioReturnPercent = (holdings: Holding[]): number => {
-  const totalCost = holdings.reduce((total, holding) => 
-    total + (holding.shares * holding.avgCost), 0);
+  const totalCost = holdings.reduce((total, holding) =>
+    total + (holding.shares * holding.avg_cost), 0);
   const totalReturn = calculatePortfolioReturn(holdings);
-  
+
   return totalCost > 0 ? (totalReturn / totalCost) * 100 : 0;
 };
 
 export const calculateWeight = (holding: Holding, totalValue: number): number => {
-  return totalValue > 0 ? (holding.marketValue / totalValue) * 100 : 0;
+  return totalValue > 0 ? (holding.market_value / totalValue) * 100 : 0;
 };
 
 export const calculateSharpeRatio = (

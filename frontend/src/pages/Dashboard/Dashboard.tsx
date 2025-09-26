@@ -11,7 +11,9 @@ import {
   Button,
   Chip,
   Avatar,
-  Divider
+  Divider,
+  AppBar,
+  Toolbar
 } from '@mui/material';
 import {
   TrendingUp,
@@ -28,6 +30,7 @@ import PerformanceCharts from '../../components/charts/PerformanceCharts';
 import NewsPanel from '../../components/news/NewsPanel';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
+import DarkModeToggle from '../../components/common/DarkModeToggle';
 import {
   fetchPortfolioSummary,
   fetchPortfolioHoldings
@@ -98,80 +101,90 @@ const Dashboard: React.FC = () => {
   if (error) return <ErrorAlert error={error} />;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      {/* Header */}
-      <Box mb={4}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
-              Welcome back {user?.firstName}!
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Here's what's happening with your portfolio today.
-            </Typography>
-          </Box>
-          <Box display="flex" gap={2}>
+    <Box>
+      <AppBar position="static" sx={{ background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)' }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
+            FinTracker Pro
+          </Typography>
+          <DarkModeToggle />
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        {/* Header */}
+        <Box mb={4}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Box>
+              <Typography variant="h4" fontWeight={700} gutterBottom>
+                Welcome back {user?.firstName}!
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                Here's what's happening with your portfolio today.
+              </Typography>
+            </Box>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                startIcon={<Analytics />}
+                onClick={() => navigate(ROUTES.ANALYTICS)}
+                sx={{ borderRadius: 2 }}
+              >
+                View Analytics
+              </Button>
+            </Box>
             <Button
               variant="contained"
-              startIcon={<Analytics />}
-              onClick={() => navigate(ROUTES.ANALYTICS)}
+              startIcon={<Add />}
+              onClick={() => navigate(ROUTES.PORTFOLIO)}
               sx={{ borderRadius: 2 }}
             >
-              View Analytics
+              Add Investment
             </Button>
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => navigate(ROUTES.PORTFOLIO)}
-            sx={{ borderRadius: 2 }}
-          >
-            Add Investment
-          </Button>
         </Box>
-      </Box>
 
-      {/* Main Content */}
-      <Grid container spacing={3}>
-        {/* Left Column */}
-        <Grid item xs={12} lg={8}>
-          {/* Portfolio Summary */}
-          <Box mb={3}>
-            <PortfolioSummary />
-          </Box>
+        {/* Main Content */}
+        <Grid container spacing={3}>
+          {/* Left Column */}
+          <Grid item xs={12} lg={8}>
+            {/* Portfolio Summary */}
+            <Box mb={3}>
+              <PortfolioSummary />
+            </Box>
 
-          {/* Performance Charts */}
-          <Box mb={3}>
-            <PerformanceCharts />
-          </Box>
+            {/* Performance Charts */}
+            <Box mb={3}>
+              <PerformanceCharts />
+            </Box>
 
-          {/* Holdings Table */}
-          <Box mb={3}>
-            <Card elevation={2}>
-              <CardContent>
-                <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Portfolio Holdings
-                </Typography>
-                <HoldingsTable />
-              </CardContent>
-            </Card>
-          </Box>          
+            {/* Holdings Table */}
+            <Box mb={3}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight={600} gutterBottom>
+                    Portfolio Holdings
+                  </Typography>
+                  <HoldingsTable />
+                </CardContent>
+              </Card>
+            </Box>
+          </Grid>
+
+          {/* Right Column */}
+          <Grid item xs={12} lg={4}>
+            {/* News Panel */}
+            <Box mb={3}>
+              <NewsPanel />
+            </Box>
+
+            {/* Recent Activity */}
+            <Box mb={3}>
+              <RecentActivity />
+            </Box>
+          </Grid>
         </Grid>
-
-        {/* Right Column */}
-        <Grid item xs={12} lg={4}>
-          {/* News Panel */}
-          <Box mb={3}>
-            <NewsPanel />
-          </Box>
-
-          {/* Recent Activity */}
-          <Box mb={3}>
-            <RecentActivity />
-          </Box>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

@@ -38,9 +38,9 @@ export const addHoldingSchema = Yup.object({
   shares: Yup.number()
     .positive('Shares must be positive')
     .required('Shares is required'),
-  price: Yup.number()
-    .positive('Price must be positive')
-    .required('Price is required'),
+  avg_cost: Yup.number()
+    .positive('Average cost must be positive')
+    .required('Average cost is required'),
 });
 
 export const validateSymbol = (symbol: string): boolean => {

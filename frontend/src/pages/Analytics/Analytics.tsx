@@ -1,5 +1,5 @@
 // src/pages/Analytics/Analytics.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Container,
@@ -7,8 +7,6 @@ import {
   Grid,
   Card,
   CardContent,
-  ToggleButton,
-  ToggleButtonGroup,
   Paper,
   Table,
   TableBody,
@@ -18,15 +16,12 @@ import {
   TableRow,
   Chip,
   LinearProgress,
-  Divider,
   Alert,
   Skeleton
 } from '@mui/material';
 import {
   LineChart,
   Line,
-  AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -34,9 +29,7 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell,
-  ScatterChart,
-  Scatter
+  Cell
 } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
@@ -168,7 +161,7 @@ const PerformanceComparisonCard: React.FC = () => {
     <Card>
       <CardContent>
         <Typography variant="h6" gutterBottom>
-          Portfolio vs Benchmark ({benchmarkComparison.timeframe})
+          Portfolio vs Benchmark
         </Typography>
         <Box sx={{ height: 300, mt: 2 }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -267,9 +260,9 @@ const SectorAllocationCard: React.FC = () => {
                     dataKey="value"
                   >
                     {sector_allocation.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={SECTOR_COLORS[entry.sector] || SECTOR_COLORS.Other} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={(SECTOR_COLORS as any)[entry.sector] || SECTOR_COLORS.TECHNOLOGY}
                       />
                     ))}
                   </Pie>
@@ -300,7 +293,7 @@ const SectorAllocationCard: React.FC = () => {
                               width: 12,
                               height: 12,
                               borderRadius: '50%',
-                              backgroundColor: SECTOR_COLORS[sector.sector] || SECTOR_COLORS.Other,
+                              backgroundColor: (SECTOR_COLORS as any)[sector.sector] || SECTOR_COLORS.TECHNOLOGY,
                               mr: 1
                             }}
                           />
@@ -479,7 +472,7 @@ const Analytics: React.FC = () => {
 
   useEffect(() => {
     if (user?.id) {
-      dispatch(fetchAnalytics(user.id));
+      dispatch(fetchAnalytics(parseInt(user.id)));
     }
   }, [dispatch, user]);
 
@@ -497,28 +490,14 @@ const Analytics: React.FC = () => {
         <Typography variant="body1" color="text.secondary">
           Advanced quantitative analysis and risk metrics for your portfolio
         </Typography>
-        {analytics.lastUpdated && (
+        {analytics.last_updated && (
           <Typography variant="caption" color="text.secondary">
-            Last updated: {new Date(analytics.lastUpdated).toLocaleString()}
+            Last updated: {new Date(analytics.last_updated).toLocaleString()}
           </Typography>
         )}
       </Box>
 
-      {/* Timeframe Selector */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
-        <ToggleButtonGroup
-          value={analytics.timeframe}
-          exclusive
-          onChange={(_, value) => value && setTimeframe(value)}
-          size="small"
-        >
-          <ToggleButton value="1M">1M</ToggleButton>
-          <ToggleButton value="6M">6M</ToggleButton>
-          <ToggleButton value="1Y">1Y</ToggleButton>
-          <ToggleButton value="3Y">3Y</ToggleButton>
-          <ToggleButton value="MAX">MAX</ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
+
 
       {/* Analytics Content */}
       <Grid container spacing={3}>

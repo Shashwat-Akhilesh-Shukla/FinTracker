@@ -15,6 +15,7 @@ import PortfolioSummary from '../portfolio/PortfolioSummary';
 import NewsPanel from '../news/NewsPanel';
 import PerformanceCharts from '../charts/PerformanceCharts';
 import MetricsGrid from '../portfolio/MetricsGrid';
+import DarkModeToggle from '../common/DarkModeToggle';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
@@ -29,6 +30,7 @@ const DashboardLayout: React.FC = () => {
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
             FinTracker Pro
           </Typography>
+          <DarkModeToggle />
         </Toolbar>
       </StyledAppBar>
       

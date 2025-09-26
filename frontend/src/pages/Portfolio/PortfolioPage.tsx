@@ -67,19 +67,19 @@ const AddHoldingDialog: React.FC<{
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading } = useSelector((state: RootState) => state.portfolio);
 
-  const handleSubmit = async (values: { symbol: string; shares: number; price: number }) => {
-    const result = await dispatch(addHolding(values));
-    if (addHolding.fulfilled.match(result)) {
-      onClose();
-      dispatch(fetchPortfolioSummary());
-    }
-  };
+  const handleSubmit = async (values: { symbol: string; shares: number; avg_cost: number }) => {
+  const result = await dispatch(addHolding(values));
+  if (addHolding.fulfilled.match(result)) {
+    onClose();
+    dispatch(fetchPortfolioSummary());
+  }
+};
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Add New Holding</DialogTitle>
       <Formik
-        initialValues={{ symbol: '', shares: 0, price: 0 }}
+        initialValues={{ symbol: '', shares: 0, avg_cost: 0 }}
         validationSchema={addHoldingSchema}
         onSubmit={handleSubmit}
       >
@@ -98,8 +98,8 @@ const AddHoldingDialog: React.FC<{
                 type="number"
               />
               <FormField
-                name="price"
-                label="Purchase Price"
+                name="avg_cost"
+                label="Average Cost"
                 type="number"
                 inputProps={{ step: 0.01 }}
               />
@@ -182,14 +182,14 @@ const HoldingsTable: React.FC = () => {
               </TableCell>
               <TableCell align="right">{holding.shares}</TableCell>
               <TableCell align="right">
-                {formatCurrency(holding.avgCost)}
+                {formatCurrency(holding.avg_cost)}
               </TableCell>
               <TableCell align="right">
                 <Box display="flex" alignItems="center" justifyContent="flex-end">
-                  {formatCurrency(holding.currentPrice)}
-                  {holding.dayChangePercent !== 0 && (
+                  {formatCurrency(holding.current_price)}
+                  {holding.day_change_percent !== 0 && (
                     <Box ml={1}>
-                      {holding.dayChangePercent > 0 ? (
+                      {holding.day_change_percent > 0 ? (
                         <TrendingUp color="success" fontSize="small" />
                       ) : (
                         <TrendingDown color="error" fontSize="small" />
@@ -200,20 +200,20 @@ const HoldingsTable: React.FC = () => {
               </TableCell>
               <TableCell align="right">
                 <Typography variant="subtitle2" fontWeight={600}>
-                  {formatCurrency(holding.marketValue)}
+                  {formatCurrency(holding.market_value)}
                 </Typography>
               </TableCell>
               <TableCell align="right">
                 <Chip
-                  label={formatPercentage(holding.dayChangePercent)}
-                  color={holding.dayChangePercent >= 0 ? 'success' : 'error'}
+                  label={formatPercentage(holding.day_change_percent)}
+                  color={holding.day_change_percent >= 0 ? 'success' : 'error'}
                   size="small"
                 />
               </TableCell>
               <TableCell align="right">
                 <Chip
-                  label={formatPercentage(holding.totalReturnPercent)}
-                  color={holding.totalReturnPercent >= 0 ? 'success' : 'error'}
+                  label={formatPercentage(holding.total_return_percent)}
+                  color={holding.total_return_percent >= 0 ? 'success' : 'error'}
                   size="small"
                 />
               </TableCell>
@@ -347,7 +347,7 @@ const PortfolioPage: React.FC = () => {
                   Total Value
                 </Typography>
                 <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.totalValue)}
+                  {formatCurrency(summary.total_value)}
                 </Typography>
               </CardContent>
             </Card>
@@ -359,11 +359,11 @@ const PortfolioPage: React.FC = () => {
                   Total Return
                 </Typography>
                 <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.totalReturn)}
+                  {formatCurrency(summary.total_return)}
                 </Typography>
                 <Chip
-                  label={formatPercentage(summary.totalReturnPercent)}
-                  color={summary.totalReturn >= 0 ? 'success' : 'error'}
+                  label={formatPercentage(summary.total_return_percent)}
+                  color={summary.total_return >= 0 ? 'success' : 'error'}
                   size="small"
                   sx={{ mt: 1 }}
                 />
@@ -377,11 +377,11 @@ const PortfolioPage: React.FC = () => {
                   Day Change
                 </Typography>
                 <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.dayChange)}
+                  {formatCurrency(summary.day_change)}
                 </Typography>
                 <Chip
-                  label={formatPercentage(summary.dayChangePercent)}
-                  color={summary.dayChange >= 0 ? 'success' : 'error'}
+                  label={formatPercentage(summary.day_change_percent)}
+                  color={summary.day_change >= 0 ? 'success' : 'error'}
                   size="small"
                   sx={{ mt: 1 }}
                 />
@@ -395,7 +395,7 @@ const PortfolioPage: React.FC = () => {
                   Cash Balance
                 </Typography>
                 <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.cashBalance)}
+                  {formatCurrency(summary.cash_balance)}
                 </Typography>
               </CardContent>
             </Card>

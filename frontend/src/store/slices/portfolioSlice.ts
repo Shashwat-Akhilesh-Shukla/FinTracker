@@ -77,9 +77,9 @@ export const fetchPortfolioHistory = createAsyncThunk(
 
 export const addHolding = createAsyncThunk(
   'portfolio/addHolding',
-  async (data: { symbol: string; shares: number; price: number }, { rejectWithValue, dispatch }) => {
+  async (data: { symbol: string; shares: number; avg_cost: number }, { rejectWithValue, dispatch }) => {
     try {
-      const holding = await portfolioService.addHolding(data.symbol, data.shares, data.avgCost);
+      const holding = await portfolioService.addHolding(data);
       // Refresh summary after adding holding
       dispatch(fetchPortfolioSummary());
       return holding;
@@ -114,10 +114,10 @@ const portfolioSlice = createSlice({
     updateHoldingPrice: (state, action: PayloadAction<{ symbol: string; price: number }>) => {
       const holding = state.holdings.find(h => h.symbol === action.payload.symbol);
       if (holding) {
-        holding.currentPrice = action.payload.price;
-        holding.marketValue = holding.shares * action.payload.price;
-        holding.totalReturn = holding.marketValue - (holding.shares * holding.avgCost);
-        holding.totalReturnPercent = (holding.totalReturn / (holding.shares * holding.avgCost)) * 100;
+        holding.current_price = action.payload.price;
+        holding.market_value = holding.shares * action.payload.price;
+        holding.total_return = holding.market_value - (holding.shares * holding.avg_cost);
+        holding.total_return_percent = (holding.total_return / (holding.shares * holding.avg_cost)) * 100;
       }
     },
     // Set loading state manually if needed

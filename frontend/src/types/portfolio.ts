@@ -37,6 +37,14 @@ export interface Transaction {
   note?: string;
 }
 
+export interface TransactionCreate {
+  symbol: string;
+  type: 'BUY' | 'SELL';
+  shares: number;
+  price: number;
+  date?: string;
+}
+
 export interface PortfolioSummary {
   total_value: number;
   total_cost: number;

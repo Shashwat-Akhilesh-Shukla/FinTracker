@@ -3,15 +3,16 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { PrivateRoute } from './components/common/PrivateRoute';
-import { theme } from './theme/theme';
+import { getTheme } from './theme/theme';
 import { store } from './store/store';
 import { ROUTES } from './constants/routes';
 import { initializeAuth } from './store/slices/authSlice';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { RootState } from './store/store';
 
 // Pages
 import { Login, Register } from './pages/Auth';
@@ -34,41 +35,48 @@ const queryClient = new QueryClient({
 // App content component to use hooks inside Provider
 const AppContent: React.FC = () => {
   const dispatch = useDispatch();
+  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
 
   useEffect(() => {
     // Initialize authentication state on app start
     dispatch(initializeAuth() as any);
   }, [dispatch]);
 
+  const theme = getTheme(isDarkMode ? 'dark' : 'light');
+
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.REGISTER} element={<Register />} />
-        
-        {/* Private Routes */}
-        <Route path={ROUTES.DASHBOARD} element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-        <Route path={ROUTES.PORTFOLIO} element={
-          <PrivateRoute>
-            <PortfolioPage />
-          </PrivateRoute>
-        } />
-        <Route path={ROUTES.ANALYTICS} element={
-          <PrivateRoute>
-            <Analytics />
-          </PrivateRoute>
-        } />
-        
-        {/* Default Route */}
-        <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-        <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path={ROUTES.LOGIN} element={<Login />} />
+          <Route path={ROUTES.REGISTER} element={<Register />} />
+          
+          {/* Private Routes */}
+          <Route path={ROUTES.DASHBOARD} element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path={ROUTES.PORTFOLIO} element={
+            <PrivateRoute>
+              <PortfolioPage />
+            </PrivateRoute>
+          } />
+          <Route path={ROUTES.ANALYTICS} element={
+            <PrivateRoute>
+              <Analytics />
+            </PrivateRoute>
+          } />
+          
+          {/* Default Route */}
+          <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+          <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+        </Routes>
+      </Router>
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+    </ThemeProvider>
   );
 };
 
@@ -77,11 +85,7 @@ const App: React.FC = () => {
     <ErrorBoundary>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <AppContent />
-          </ThemeProvider>
-          {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+          <AppContent />
         </QueryClientProvider>
       </Provider>
     </ErrorBoundary>
