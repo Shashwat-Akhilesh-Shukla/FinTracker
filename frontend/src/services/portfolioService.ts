@@ -64,7 +64,21 @@ export const portfolioService = {
   getTransactions: async () => {
     try {
       const response = await apiClient.get(API_ENDPOINTS.PORTFOLIO.TRANSACTIONS);
-      return response.data;
+
+      // Transform the data to match frontend Transaction type
+      const transactions = response.data.map((transaction: any) => ({
+        id: transaction.id,
+        symbol: transaction.symbol,
+        type: transaction.type,
+        shares: transaction.shares,
+        price: transaction.price,
+        amount: transaction.amount || (transaction.shares * transaction.price), // Calculate if not provided
+        fees: transaction.fees || 0,
+        date: transaction.transaction_date, // Map transaction_date to date
+        note: transaction.note
+      }));
+
+      return transactions;
     } catch (error: any) {
       handleApiError(error, 'Failed to fetch transactions');
     }

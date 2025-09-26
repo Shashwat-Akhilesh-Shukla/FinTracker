@@ -33,19 +33,21 @@ import { ErrorAlert } from '../../components/common/ErrorAlert';
 import DarkModeToggle from '../../components/common/DarkModeToggle';
 import {
   fetchPortfolioSummary,
-  fetchPortfolioHoldings
+  fetchPortfolioHoldings,
+  fetchPortfolioTransactions
 } from '../../store/slices/portfolioSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import { ROUTES } from '../../constants/routes';
 import { Analytics } from '@mui/icons-material';
-import { formatCurrency, formatPercentage } from '../../utils/formatters';
+import { formatCurrency, formatPercentage, formatDateTime } from '../../utils/formatters';
 
 const RecentActivity: React.FC = () => {
-  const activities = [
-    { type: 'BUY', symbol: 'AAPL', shares: 10, price: 175.23, time: '2 hours ago' },
-    { type: 'SELL', symbol: 'GOOGL', shares: 5, price: 2750.45, time: '1 day ago' },
-    { type: 'DIVIDEND', symbol: 'MSFT', amount: 15.60, time: '3 days ago' },
-  ];
+  const { transactions } = useSelector((state: RootState) => state.portfolio);
+
+  // Get recent 3 transactions, sorted by date descending
+  const recentTransactions = [...transactions]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
   return (
     <Card elevation={2}>
@@ -54,26 +56,30 @@ const RecentActivity: React.FC = () => {
           Recent Activity
         </Typography>
         <Divider sx={{ mb: 2 }} />
-        {activities.map((activity, index) => (
-          <Box key={index} display="flex" justifyContent="space-between" py={1}>
-            <Box>
-              <Chip
-                label={activity.type}
-                color={activity.type === 'BUY' ? 'success' : activity.type === 'SELL' ? 'error' : 'info'}
-                size="small"
-                sx={{ mr: 1 }}
-              />
-              <Typography variant="body2" component="span">
-                {activity.symbol}
-                {activity.shares && ` - ${activity.shares} shares`}
-                {activity.amount && ` - ${formatCurrency(activity.amount)}`}
+        {recentTransactions.length > 0 ? (
+          recentTransactions.map((transaction) => (
+            <Box key={transaction.id} display="flex" justifyContent="space-between" py={1}>
+              <Box>
+                <Chip
+                  label={transaction.type}
+                  color={transaction.type === 'BUY' ? 'success' : 'error'}
+                  size="small"
+                  sx={{ mr: 1 }}
+                />
+                <Typography variant="body2" component="span">
+                  {transaction.symbol} - {transaction.shares} shares at {formatCurrency(transaction.price)}
+                </Typography>
+              </Box>
+              <Typography variant="caption" color="textSecondary">
+                {formatDateTime(transaction.date)}
               </Typography>
             </Box>
-            <Typography variant="caption" color="textSecondary">
-              {activity.time}
-            </Typography>
-          </Box>
-        ))}
+          ))
+        ) : (
+          <Typography variant="body2" color="textSecondary">
+            No recent activity
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
@@ -88,10 +94,12 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
   dispatch(fetchPortfolioSummary());
   dispatch(fetchPortfolioHoldings());
+  dispatch(fetchPortfolioTransactions());
 
   const interval = setInterval(() => {
     dispatch(fetchPortfolioSummary());
     dispatch(fetchPortfolioHoldings());
+    dispatch(fetchPortfolioTransactions());
   }, 300000); // refresh every 5 minutes
 
   return () => clearInterval(interval);

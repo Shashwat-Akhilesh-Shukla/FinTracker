@@ -45,7 +45,7 @@ import {
   fetchPortfolioTransactions,
 } from '../../store/slices/portfolioSlice';
 import { addHoldingSchema } from '../../utils/validators';
-import { formatCurrency, formatPercentage } from '../../utils/formatters';
+import { formatCurrency, formatPercentage, formatDateTime } from '../../utils/formatters';
 import { RootState, AppDispatch } from '../../store/store';
 
 interface TabPanelProps {
@@ -261,7 +261,7 @@ const TransactionsTable: React.FC = () => {
           {transactions.map((transaction) => (
             <TableRow key={transaction.id} hover>
               <TableCell>
-                {new Date(transaction.date).toLocaleDateString()}
+                {formatDateTime(transaction.date)}
               </TableCell>
               <TableCell>
                 <Chip

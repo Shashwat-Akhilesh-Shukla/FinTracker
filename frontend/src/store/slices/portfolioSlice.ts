@@ -164,6 +164,21 @@ const portfolioSlice = createSlice({
         state.sectorAllocation = action.payload.sectorAllocation;
       })
 
+      // Fetch Transactions
+      .addCase(fetchPortfolioTransactions.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioTransactions.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.transactions = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchPortfolioTransactions.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
       // Fetch History
       .addCase(fetchPortfolioHistory.fulfilled, (state, action) => {
         state.history = action.payload;
