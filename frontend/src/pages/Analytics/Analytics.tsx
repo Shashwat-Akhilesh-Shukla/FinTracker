@@ -34,7 +34,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
-import { fetchAnalytics } from '../../store/slices/analyticsSlice';
+import { fetchAnalytics, fetchBenchmarkComparison } from '../../store/slices/analyticsSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import { SECTOR_COLORS } from '../../constants/colors';
 import { formatCurrency, formatPercentage } from '../../utils/formatters';
@@ -473,6 +473,7 @@ const Analytics: React.FC = () => {
   useEffect(() => {
     if (user?.id) {
       dispatch(fetchAnalytics(parseInt(user.id)));
+      dispatch(fetchBenchmarkComparison({ userId: parseInt(user.id), timeframe: '1Y' }));
     }
   }, [dispatch, user]);
 

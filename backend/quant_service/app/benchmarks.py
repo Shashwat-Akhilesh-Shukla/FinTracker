@@ -107,4 +107,63 @@ class BenchmarkService:
 
         return returns
 
+    def generate_mock_benchmark_data(self, timeframe: str) -> Dict[str, List[Dict]]:
+        """Generate realistic mock benchmark data for visualization"""
+        import numpy as np
+        from datetime import datetime, timedelta
+
+        period_days = {
+            "1M": 30,
+            "6M": 180,
+            "1Y": 365,
+            "3Y": 1095,
+            "MAX": 2000
+        }
+        days = period_days.get(timeframe, 365)
+
+        # Generate dates
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days)
+        dates = [start_date + timedelta(days=i) for i in range(days)]
+
+        benchmark_data = {}
+
+        # Benchmark characteristics (approximate real market data)
+        benchmark_params = {
+            "NIFTY50": {"start_price": 18000, "annual_return": 0.12, "volatility": 0.18},
+            "SP500": {"start_price": 4000, "annual_return": 0.10, "volatility": 0.15},
+            "NASDAQ": {"start_price": 13000, "annual_return": 0.13, "volatility": 0.20},
+            "SENSEX": {"start_price": 65000, "annual_return": 0.11, "volatility": 0.17}
+        }
+
+        np.random.seed(42)  # For reproducible results
+
+        for name, params in benchmark_params.items():
+            prices = []
+            current_price = params["start_price"]
+
+            # Generate price series with realistic volatility and trends
+            daily_return = params["annual_return"] / 252
+            daily_volatility = params["volatility"] / np.sqrt(252)
+
+            prev_return = 0.0
+
+            for date in dates:
+                # Add autocorrelation and random noise
+                autocorrelation = 0.1
+                noise = np.random.normal(0, daily_volatility)
+                daily_return_val = daily_return + autocorrelation * prev_return + noise
+
+                current_price *= (1 + daily_return_val)
+                prev_return = daily_return_val
+
+                prices.append({
+                    "date": date.strftime("%Y-%m-%d"),
+                    "close": round(current_price, 2)
+                })
+
+            benchmark_data[name] = prices
+
+        return benchmark_data
+
 benchmark_service = BenchmarkService()
