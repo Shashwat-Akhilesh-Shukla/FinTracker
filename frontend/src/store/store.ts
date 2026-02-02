@@ -12,6 +12,7 @@ import { composeWithDevTools } from '@redux-devtools/extension'
 import { authSlice } from './slices/authSlice';
 import { portfolioSlice } from './slices/portfolioSlice';
 import { marketSlice } from './slices/marketSlice';
+import { profileSlice } from './slices/profileSlice';
 import analyticsReducer from './slices/analyticsSlice';
 import themeReducer from './slices/themeSlice';
 import { apiSlice } from './api/apiSlice';
@@ -21,6 +22,7 @@ export const store = configureStore({
     auth: authSlice.reducer,
     portfolio: portfolioSlice.reducer,
     market: marketSlice.reducer,
+    profile: profileSlice.reducer,
     api: apiSlice.reducer,
     analytics: analyticsReducer,
     theme: themeReducer,
@@ -31,7 +33,7 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
     }).concat(apiSlice.middleware),
-  
+
   devTools: true,
 });
 

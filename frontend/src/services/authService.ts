@@ -7,7 +7,7 @@ export const authService = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGIN, credentials);
-      
+
       const backendData = response.data;
       return {
         user: {
@@ -41,10 +41,10 @@ export const authService = {
         first_name: data.firstName,
         last_name: data.lastName
       };
-      
+
       const response = await apiClient.post(API_ENDPOINTS.AUTH.REGISTER, registerPayload);
       const backendData = response.data;
-      
+
       return {
         user: {
           id: backendData.user?.id || '1',
@@ -88,9 +88,9 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.REFRESH, {
         refresh_token: refreshToken
       });
-      
+
       const backendData = response.data;
-      
+
       return {
         user: {
           id: backendData.user?.id || '1',
@@ -113,21 +113,50 @@ export const authService = {
 
   // New method to get current user profile
   getCurrentUser: async (): Promise<User> => {
-  try {
-    const response = await apiClient.get(API_ENDPOINTS.AUTH.ME);
-    return {
-      id: response.data.id,
-      email: response.data.email,
-      firstName: response.data.first_name,
-      lastName: response.data.last_name,
-      avatar: response.data.avatar,
-      createdAt: response.data.created_at,
-      lastLogin: response.data.last_login
-    };
-  } catch (error) {
-    throw new Error('Failed to get user profile');
-  }
-},
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.AUTH.ME);
+      return {
+        id: response.data.id,
+        email: response.data.email,
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        avatar: response.data.avatar,
+        createdAt: response.data.created_at,
+        lastLogin: response.data.last_login
+      };
+    } catch (error) {
+      throw new Error('Failed to get user profile');
+    }
+  },
+
+  updateProfile: async (data: { firstName?: string; lastName?: string; email?: string }): Promise<User> => {
+    try {
+      const updatePayload: any = {};
+      if (data.firstName) updatePayload.first_name = data.firstName;
+      if (data.lastName) updatePayload.last_name = data.lastName;
+      if (data.email) updatePayload.email = data.email;
+
+      const response = await apiClient.put(API_ENDPOINTS.AUTH.ME, updatePayload);
+
+      return {
+        id: response.data.id,
+        email: response.data.email,
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        avatar: response.data.avatar,
+        createdAt: response.data.created_at,
+        lastLogin: response.data.last_login
+      };
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        throw new Error(error.response?.data?.detail || 'Invalid profile data');
+      }
+      if (error.response?.status === 409) {
+        throw new Error('Email already in use');
+      }
+      throw new Error('Failed to update profile. Please try again.');
+    }
+  },
 
   verifyToken: async (): Promise<boolean> => {
     try {

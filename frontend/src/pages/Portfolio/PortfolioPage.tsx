@@ -34,6 +34,7 @@ import {
 } from '@mui/icons-material';
 import { Formik, Form } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import MainLayout from '../../components/layout/MainLayout';
 import { FormField } from '../../components/common/FormField';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
@@ -68,12 +69,12 @@ const AddHoldingDialog: React.FC<{
   const { isLoading } = useSelector((state: RootState) => state.portfolio);
 
   const handleSubmit = async (values: { symbol: string; shares: number; avg_cost: number }) => {
-  const result = await dispatch(addHolding(values));
-  if (addHolding.fulfilled.match(result)) {
-    onClose();
-    dispatch(fetchPortfolioSummary());
-  }
-};
+    const result = await dispatch(addHolding(values));
+    if (addHolding.fulfilled.match(result)) {
+      onClose();
+      dispatch(fetchPortfolioSummary());
+    }
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -316,136 +317,138 @@ const PortfolioPage: React.FC = () => {
   if (error) return <ErrorAlert error={error} />;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Box>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
-            My Portfolio
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Manage your investments and track performance
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => setAddDialogOpen(true)}
-          sx={{ borderRadius: 2 }}
-        >
-          Add Investment
-        </Button>
-      </Box>
-
-      {/* Portfolio Summary Cards */}
-      {summary && (
-        <Grid container spacing={3} mb={4}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={2}>
-              <CardContent>
-                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                  Total Value
-                </Typography>
-                <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.total_value)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={2}>
-              <CardContent>
-                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                  Total Return
-                </Typography>
-                <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.total_return)}
-                </Typography>
-                <Chip
-                  label={formatPercentage(summary.total_return_percent)}
-                  color={summary.total_return >= 0 ? 'success' : 'error'}
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={2}>
-              <CardContent>
-                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                  Day Change
-                </Typography>
-                <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.day_change)}
-                </Typography>
-                <Chip
-                  label={formatPercentage(summary.day_change_percent)}
-                  color={summary.day_change >= 0 ? 'success' : 'error'}
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card elevation={2}>
-              <CardContent>
-                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                  Cash Balance
-                </Typography>
-                <Typography variant="h4" fontWeight={700}>
-                  {formatCurrency(summary.cash_balance)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      )}
-
-      {/* Tabs */}
-      <Card elevation={2}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={tabValue}
-            onChange={(_, newValue) => setTabValue(newValue)}
-            sx={{ px: 3 }}
+    <MainLayout>
+      <Container maxWidth="xl" sx={{ py: 0 }}>
+        {/* Header */}
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+          <Box>
+            <Typography variant="h4" fontWeight={700} gutterBottom>
+              My Portfolio
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              Manage your investments and track performance
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => setAddDialogOpen(true)}
+            sx={{ borderRadius: 2 }}
           >
-            <Tab label="Holdings" />
-            <Tab label="Transactions" />
-            <Tab label="Performance" />
-          </Tabs>
+            Add Investment
+          </Button>
         </Box>
 
-        <TabPanel value={tabValue} index={0}>
-          <HoldingsTable />
-        </TabPanel>
+        {/* Portfolio Summary Cards */}
+        {summary && (
+          <Grid container spacing={3} mb={4}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Total Value
+                  </Typography>
+                  <Typography variant="h4" fontWeight={700}>
+                    {formatCurrency(summary.total_value)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Total Return
+                  </Typography>
+                  <Typography variant="h4" fontWeight={700}>
+                    {formatCurrency(summary.total_return)}
+                  </Typography>
+                  <Chip
+                    label={formatPercentage(summary.total_return_percent)}
+                    color={summary.total_return >= 0 ? 'success' : 'error'}
+                    size="small"
+                    sx={{ mt: 1 }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Day Change
+                  </Typography>
+                  <Typography variant="h4" fontWeight={700}>
+                    {formatCurrency(summary.day_change)}
+                  </Typography>
+                  <Chip
+                    label={formatPercentage(summary.day_change_percent)}
+                    color={summary.day_change >= 0 ? 'success' : 'error'}
+                    size="small"
+                    sx={{ mt: 1 }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card elevation={2}>
+                <CardContent>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Cash Balance
+                  </Typography>
+                  <Typography variant="h4" fontWeight={700}>
+                    {formatCurrency(summary.cash_balance)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        )}
 
-        <TabPanel value={tabValue} index={1}>
-          <TransactionsTable />
-        </TabPanel>
+        {/* Tabs */}
+        <Card elevation={2}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={tabValue}
+              onChange={(_, newValue) => setTabValue(newValue)}
+              sx={{ px: 3 }}
+            >
+              <Tab label="Holdings" />
+              <Tab label="Transactions" />
+              <Tab label="Performance" />
+            </Tabs>
+          </Box>
 
-        <TabPanel value={tabValue} index={2}>
-          <Typography variant="h6">Performance analysis coming soon...</Typography>
-        </TabPanel>
-      </Card>
+          <TabPanel value={tabValue} index={0}>
+            <HoldingsTable />
+          </TabPanel>
 
-      {/* Floating Add Button */}
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        onClick={() => setAddDialogOpen(true)}
-      >
-        <Add />
-      </Fab>
+          <TabPanel value={tabValue} index={1}>
+            <TransactionsTable />
+          </TabPanel>
 
-      {/* Add Holding Dialog */}
-      <AddHoldingDialog
-        open={addDialogOpen}
-        onClose={() => setAddDialogOpen(false)}
-      />
-    </Container>
+          <TabPanel value={tabValue} index={2}>
+            <Typography variant="h6">Performance analysis coming soon...</Typography>
+          </TabPanel>
+        </Card>
+
+        {/* Floating Add Button */}
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+          onClick={() => setAddDialogOpen(true)}
+        >
+          <Add />
+        </Fab>
+
+        {/* Add Holding Dialog */}
+        <AddHoldingDialog
+          open={addDialogOpen}
+          onClose={() => setAddDialogOpen(false)}
+        />
+      </Container>
+    </MainLayout>
   );
 };
 

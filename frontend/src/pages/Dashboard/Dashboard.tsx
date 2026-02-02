@@ -5,32 +5,25 @@ import {
   Container,
   Grid,
   Typography,
-  Paper,
   Card,
   CardContent,
   Button,
   Chip,
-  Avatar,
   Divider,
-  AppBar,
-  Toolbar
 } from '@mui/material';
 import {
-  TrendingUp,
-  AccountBalance,
-  ShowChart,
-  Notifications,
-  Add
+  Add,
+  Analytics
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import MainLayout from '../../components/layout/MainLayout';
 import PortfolioSummary from '../../components/portfolio/PortfolioSummary';
 import HoldingsTable from '../../components/portfolio/HoldingsTable';
 import PerformanceCharts from '../../components/charts/PerformanceCharts';
 import NewsPanel from '../../components/news/NewsPanel';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
-import DarkModeToggle from '../../components/common/DarkModeToggle';
 import {
   fetchPortfolioSummary,
   fetchPortfolioHoldings,
@@ -38,7 +31,6 @@ import {
 } from '../../store/slices/portfolioSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import { ROUTES } from '../../constants/routes';
-import { Analytics } from '@mui/icons-material';
 import { formatCurrency, formatPercentage, formatDateTime } from '../../utils/formatters';
 
 const RecentActivity: React.FC = () => {
@@ -92,39 +84,31 @@ const Dashboard: React.FC = () => {
   const { isLoading, error } = useSelector((state: RootState) => state.portfolio);
 
   useEffect(() => {
-  dispatch(fetchPortfolioSummary());
-  dispatch(fetchPortfolioHoldings());
-  dispatch(fetchPortfolioTransactions());
-
-  const interval = setInterval(() => {
     dispatch(fetchPortfolioSummary());
     dispatch(fetchPortfolioHoldings());
     dispatch(fetchPortfolioTransactions());
-  }, 300000); // refresh every 5 minutes
 
-  return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      dispatch(fetchPortfolioSummary());
+      dispatch(fetchPortfolioHoldings());
+      dispatch(fetchPortfolioTransactions());
+    }, 300000); // refresh every 5 minutes
+
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   if (isLoading) return <LoadingSpinner message="Loading dashboard..." />;
   if (error) return <ErrorAlert error={error} />;
 
   return (
-    <Box>
-      <AppBar position="static" sx={{ background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
-            FinTracker Pro
-          </Typography>
-          <DarkModeToggle />
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="xl" sx={{ py: 3 }}>
+    <MainLayout>
+      <Container maxWidth="xl" sx={{ py: 0 }}>
         {/* Header */}
         <Box mb={4}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Box>
               <Typography variant="h4" fontWeight={700} gutterBottom>
-                Welcome back {user?.firstName}!
+                Welcome back, {user?.firstName}!
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 Here's what's happening with your portfolio today.
@@ -139,15 +123,15 @@ const Dashboard: React.FC = () => {
               >
                 View Analytics
               </Button>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={() => navigate(ROUTES.PORTFOLIO)}
+                sx={{ borderRadius: 2 }}
+              >
+                Add Investment
+              </Button>
             </Box>
-            <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => navigate(ROUTES.PORTFOLIO)}
-              sx={{ borderRadius: 2 }}
-            >
-              Add Investment
-            </Button>
           </Box>
         </Box>
 
@@ -192,7 +176,7 @@ const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-    </Box>
+    </MainLayout>
   );
 };
 

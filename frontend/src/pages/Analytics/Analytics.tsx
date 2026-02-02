@@ -32,6 +32,7 @@ import {
   Cell
 } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
+import MainLayout from '../../components/layout/MainLayout';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { ErrorAlert } from '../../components/common/ErrorAlert';
 import { fetchAnalytics, fetchBenchmarkComparison } from '../../store/slices/analyticsSlice';
@@ -60,41 +61,41 @@ const RiskMetricsCard: React.FC = () => {
   }
 
   const { performance_metrics } = analytics;
-  
+
   const riskMetrics = [
-    { 
-      label: 'Sharpe Ratio', 
-      value: performance_metrics.sharpe_ratio.toFixed(3), 
+    {
+      label: 'Sharpe Ratio',
+      value: performance_metrics.sharpe_ratio.toFixed(3),
       description: 'Risk-adjusted return',
       color: performance_metrics.sharpe_ratio > 1 ? '#4caf50' : performance_metrics.sharpe_ratio > 0 ? '#ff9800' : '#f44336'
     },
-    { 
-      label: 'Beta', 
-      value: performance_metrics.beta.toFixed(3), 
+    {
+      label: 'Beta',
+      value: performance_metrics.beta.toFixed(3),
       description: 'Market sensitivity',
       color: performance_metrics.beta > 1 ? '#f44336' : '#4caf50'
     },
-    { 
-      label: 'Alpha', 
-      value: `${performance_metrics.alpha.toFixed(2)}%`, 
+    {
+      label: 'Alpha',
+      value: `${performance_metrics.alpha.toFixed(2)}%`,
       description: 'Excess return over benchmark',
       color: performance_metrics.alpha > 0 ? '#4caf50' : '#f44336'
     },
-    { 
-      label: 'Max Drawdown', 
-      value: `${performance_metrics.max_drawdown.toFixed(2)}%`, 
+    {
+      label: 'Max Drawdown',
+      value: `${performance_metrics.max_drawdown.toFixed(2)}%`,
       description: 'Largest peak-to-trough decline',
       color: performance_metrics.max_drawdown > 20 ? '#f44336' : performance_metrics.max_drawdown > 10 ? '#ff9800' : '#4caf50'
     },
-    { 
-      label: 'Volatility', 
-      value: `${performance_metrics.volatility.toFixed(2)}%`, 
+    {
+      label: 'Volatility',
+      value: `${performance_metrics.volatility.toFixed(2)}%`,
       description: 'Annualized standard deviation',
       color: performance_metrics.volatility > 25 ? '#f44336' : performance_metrics.volatility > 15 ? '#ff9800' : '#4caf50'
     },
-    { 
-      label: 'Sortino Ratio', 
-      value: performance_metrics.sortino_ratio.toFixed(3), 
+    {
+      label: 'Sortino Ratio',
+      value: performance_metrics.sortino_ratio.toFixed(3),
       description: 'Downside risk-adjusted return',
       color: performance_metrics.sortino_ratio > 1 ? '#4caf50' : performance_metrics.sortino_ratio > 0 ? '#ff9800' : '#f44336'
     },
@@ -167,31 +168,31 @@ const PerformanceComparisonCard: React.FC = () => {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
+              <XAxis
+                dataKey="date"
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) => value.split('/').slice(0, 2).join('/')}
               />
               <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number, name: string) => [
-                  formatCurrency(value), 
+                  formatCurrency(value),
                   name === 'portfolio' ? 'Portfolio' : 'Benchmark'
                 ]}
                 labelFormatter={(label) => `Date: ${label}`}
               />
-              <Line 
-                type="monotone" 
-                dataKey="portfolio" 
-                stroke="#2196f3" 
+              <Line
+                type="monotone"
+                dataKey="portfolio"
+                stroke="#2196f3"
                 strokeWidth={2}
                 dot={false}
                 name="Portfolio"
               />
-              <Line 
-                type="monotone" 
-                dataKey="benchmark" 
-                stroke="#ff9800" 
+              <Line
+                type="monotone"
+                dataKey="benchmark"
+                stroke="#ff9800"
                 strokeWidth={2}
                 dot={false}
                 name="Benchmark"
@@ -199,7 +200,7 @@ const PerformanceComparisonCard: React.FC = () => {
             </LineChart>
           </ResponsiveContainer>
         </Box>
-        
+
         {/* Benchmark Returns Summary */}
         <Box sx={{ mt: 3 }}>
           <Typography variant="subtitle2" gutterBottom>Benchmark Returns</Typography>
@@ -208,8 +209,8 @@ const PerformanceComparisonCard: React.FC = () => {
               <Grid item xs={6} sm={3} key={name}>
                 <Paper sx={{ p: 1, textAlign: 'center' }}>
                   <Typography variant="body2" color="text.secondary">{name}</Typography>
-                  <Typography 
-                    variant="h6" 
+                  <Typography
+                    variant="h6"
                     sx={{ color: value >= 0 ? '#4caf50' : '#f44336' }}
                   >
                     {value.toFixed(2)}%
@@ -271,7 +272,7 @@ const SectorAllocationCard: React.FC = () => {
               </ResponsiveContainer>
             </Box>
           </Grid>
-          
+
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle2" gutterBottom>Sector Breakdown</Typography>
             <TableContainer component={Paper} variant="outlined">
@@ -302,7 +303,7 @@ const SectorAllocationCard: React.FC = () => {
                       </TableCell>
                       <TableCell align="right">{formatCurrency(sector.value)}</TableCell>
                       <TableCell align="right">
-                        <Chip 
+                        <Chip
                           label={`${sector.percentage.toFixed(1)}%`}
                           size="small"
                           color={sector.percentage > 20 ? "error" : sector.percentage > 10 ? "warning" : "success"}
@@ -354,7 +355,7 @@ const CorrelationMatrixCard: React.FC = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           Values range from -1 (perfect negative correlation) to +1 (perfect positive correlation)
         </Typography>
-        
+
         <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 400 }}>
           <Table stickyHeader size="small">
             <TableHead>
@@ -394,10 +395,10 @@ const CorrelationMatrixCard: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <Box sx={{ mt: 2 }}>
           <Typography variant="caption" color="text.secondary">
-            <strong>Interpretation:</strong> Values closer to 1 indicate assets move together, 
+            <strong>Interpretation:</strong> Values closer to 1 indicate assets move together,
             closer to -1 indicate opposite movements, and closer to 0 indicate independence.
           </Typography>
         </Box>
@@ -421,7 +422,7 @@ const DiversificationCard: React.FC = () => {
 
   const { diversification_score } = analytics;
   const scorePercentage = diversification_score * 100;
-  
+
   const getDiversificationLevel = (score: number) => {
     if (score >= 0.8) return { level: 'Excellent', color: '#4caf50' };
     if (score >= 0.6) return { level: 'Good', color: '#8bc34a' };
@@ -443,8 +444,8 @@ const DiversificationCard: React.FC = () => {
           <Typography variant="h6" sx={{ color: diversificationLevel.color, mb: 2 }}>
             {diversificationLevel.level}
           </Typography>
-          <LinearProgress 
-            variant="determinate" 
+          <LinearProgress
+            variant="determinate"
             value={scorePercentage}
             sx={{
               height: 10,
@@ -457,7 +458,7 @@ const DiversificationCard: React.FC = () => {
           />
         </Box>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          Diversification score is calculated based on concentration risk across your holdings. 
+          Diversification score is calculated based on concentration risk across your holdings.
           Higher scores indicate better risk distribution.
         </Typography>
       </CardContent>
@@ -482,50 +483,52 @@ const Analytics: React.FC = () => {
   if (!analytics) return null;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Portfolio Analytics
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Advanced quantitative analysis and risk metrics for your portfolio
-        </Typography>
-        {analytics.last_updated && (
-          <Typography variant="caption" color="text.secondary">
-            Last updated: {new Date(analytics.last_updated).toLocaleString()}
+    <MainLayout>
+      <Container maxWidth="xl" sx={{ py: 0 }}>
+        {/* Header */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Portfolio Analytics
           </Typography>
-        )}
-      </Box>
+          <Typography variant="body1" color="text.secondary">
+            Advanced quantitative analysis and risk metrics for your portfolio
+          </Typography>
+          {analytics.last_updated && (
+            <Typography variant="caption" color="text.secondary">
+              Last updated: {new Date(analytics.last_updated).toLocaleString()}
+            </Typography>
+          )}
+        </Box>
 
 
 
-      {/* Analytics Content */}
-      <Grid container spacing={3}>
-        {/* Risk Metrics */}
-        <Grid item xs={12}>
-          <RiskMetricsCard />
+        {/* Analytics Content */}
+        <Grid container spacing={3}>
+          {/* Risk Metrics */}
+          <Grid item xs={12}>
+            <RiskMetricsCard />
+          </Grid>
+
+          {/* Performance vs Benchmark */}
+          <Grid item xs={12}>
+            <PerformanceComparisonCard />
+          </Grid>
+
+          {/* Sector Analysis and Diversification */}
+          <Grid item xs={12} lg={8}>
+            <SectorAllocationCard />
+          </Grid>
+          <Grid item xs={12} lg={4}>
+            <DiversificationCard />
+          </Grid>
+
+          {/* Correlation Analysis */}
+          <Grid item xs={12}>
+            <CorrelationMatrixCard />
+          </Grid>
         </Grid>
-
-        {/* Performance vs Benchmark */}
-        <Grid item xs={12}>
-          <PerformanceComparisonCard />
-        </Grid>
-
-        {/* Sector Analysis and Diversification */}
-        <Grid item xs={12} lg={8}>
-          <SectorAllocationCard />
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <DiversificationCard />
-        </Grid>
-
-        {/* Correlation Analysis */}
-        <Grid item xs={12}>
-          <CorrelationMatrixCard />
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </MainLayout>
   );
 };
 
