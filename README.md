@@ -17,7 +17,6 @@ FinTracker is a comprehensive financial portfolio management platform built with
 
 🔹 **Real-Time Portfolio Tracking** - Live market data updates with WebSocket connections  
 🔹 **Advanced Analytics** - Sharpe Ratio, Alpha, Beta, VaR, and custom risk metrics  
-🔹 **AI-Powered Insights** - Machine learning models for market prediction and trend analysis  
 🔹 **News Aggregation** - Multi-source financial news with sentiment analysis  
 🔹 **Microservices Architecture** - Scalable, maintainable, and fault-tolerant backend  
 🔹 **Enterprise Security** - JWT authentication, rate limiting, and data encryption  
