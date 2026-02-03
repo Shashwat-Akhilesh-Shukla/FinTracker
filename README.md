@@ -2,7 +2,7 @@
 
 <div align="center">
 
-*A sophisticated, AI-powered financial portfolio tracker with real-time analytics, microservices architecture, and enterprise-grade security.*
+*A sophisticated, Financial Portfolio tracker with real-time analytics, microservices architecture, and enterprise-grade security.*
 </div>
 
 ***
@@ -11,7 +11,7 @@
 
 ## 🎯 Overview
 
-FinTracker is a comprehensive financial portfolio management platform built with modern web technologies and microservices architecture. It provides real-time market data, advanced analytics, AI-powered insights, and intuitive dashboards for investors of all levels.
+FinTracker is a comprehensive financial portfolio management platform built with modern web technologies and microservices architecture. It provides real-time market data, advanced analytics and intuitive dashboards for investors of all levels.
 
 ### ✨ Key Features
 
