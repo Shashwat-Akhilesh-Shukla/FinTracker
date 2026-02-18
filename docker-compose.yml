@@ -58,8 +58,6 @@ services:
     build:
       context: ./backend/portfolio_service
       dockerfile: Dockerfile
-      args:
-        PORT: 8002
     env_file:
       - ./backend/portfolio_service/.env
     ports:
@@ -73,8 +71,6 @@ services:
     build:
       context: ./backend/news_service
       dockerfile: Dockerfile
-      args:
-        PORT: 8003
     env_file:
       - ./backend/news_service/.env
     ports:
