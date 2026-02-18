@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     ALPHA_VANTAGE_API_KEY: str
     FINNHUB_API_KEY: str
+    PERPLEXITY_API_KEY: str
 
     AUTH_SERVICE_URL: str
     NEWS_SERVICE_URL: str

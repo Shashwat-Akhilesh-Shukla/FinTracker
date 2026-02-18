@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import portfolio, holdings, transactions, market
+from app.api.v1.endpoints import portfolio, holdings, transactions, market, chatbot
 
 """
 API router configuration that:
@@ -30,6 +30,11 @@ api_router.include_router(
 api_router.include_router(
     market.router,
     tags=["market"]
+)
+
+api_router.include_router(
+    chatbot.router,
+    tags=["chatbot"]
 )
 
 @api_router.get("/health")

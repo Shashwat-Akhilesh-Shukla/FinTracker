@@ -11,3 +11,4 @@ SQLAlchemy==2.0.43
 psycopg2-binary==2.9.10
 yfinance==0.2.43
 git+https://github.com/KoushikEng/tvdatafeed.git
+openai>=1.0.0
