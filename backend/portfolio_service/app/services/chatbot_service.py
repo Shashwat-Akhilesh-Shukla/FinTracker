@@ -14,6 +14,8 @@ from app.models.portfolio import Portfolio
 from app.models.holding import Holding
 from app.models.transaction import Transaction
 from app.core.config import settings
+from app.services.analytics_service import AnalyticsService
+
 
 
 def _build_portfolio_context(db: Session, user_id: int) -> str:
@@ -38,6 +40,26 @@ def _build_portfolio_context(db: Session, user_id: int) -> str:
     lines.append(f"Dividend Income:      ${portfolio.dividend_income:,.2f}")
     if portfolio.last_sync:
         lines.append(f"Last Synced:          {portfolio.last_sync.strftime('%Y-%m-%d %H:%M UTC')}")
+
+    # --- Advanced Metrics ---
+    analytics = AnalyticsService(db)
+    metrics = analytics.calculate_portfolio_metrics(portfolio.id)
+    if metrics:
+        lines.append("\n=== ADVANCED PERFORMANCE & RISK METRICS ===")
+        lines.append(f"Sharpe Ratio:         {metrics.get('sharpe_ratio', 0.0):.2f}")
+        lines.append(f"Beta (vs Market):     {metrics.get('beta', 1.0):.2f}")
+        lines.append(f"Alpha:               {metrics.get('alpha', 0.0):.2f}%")
+        lines.append(f"Volatility (SD):     {metrics.get('volatility', 0.0):.2f}%")
+        lines.append(f"Max Drawdown:        {metrics.get('max_drawdown', 0.0):.2f}%")
+        lines.append(f"Value at Risk (95%): {metrics.get('var_95', 0.0):.2f}%")
+        lines.append(f"Annualized Return:    {metrics.get('annualized_return', 0.0):.2f}%")
+
+    # --- Sector Allocation ---
+    sectors = analytics.calculate_sector_allocation(portfolio.id)
+    if sectors:
+        lines.append("\n=== SECTOR ALLOCATION ===")
+        for s in sectors:
+            lines.append(f"{s['sector']:<20} {s['percentage']:>6.2f}% (${s['value']:,.2f})")
 
     # --- Holdings ---
     holdings = db.query(Holding).filter(Holding.portfolio_id == portfolio.id).all()
