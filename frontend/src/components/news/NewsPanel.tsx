@@ -25,6 +25,7 @@ interface NewsItemProps {
   publishedAt: string;
   sentiment: 'positive' | 'negative' | 'neutral';
   imageUrl?: string;
+  sourceReliabilityTag: 'verified' | 'community' | 'analysis' | 'standard';
 }
 
 const NewsItem: React.FC<NewsItemProps> = ({
@@ -39,6 +40,16 @@ const NewsItem: React.FC<NewsItemProps> = ({
     switch (sentiment) {
       case 'positive': return 'success';
       case 'negative': return 'error';
+      default: return 'default';
+    }
+  };
+
+  const getReliabilityColor = (tag: string) => {
+    switch (tag) {
+      case 'verified': return 'info';
+      case 'standard': return 'default';
+      case 'analysis': return 'warning';
+      case 'community': return 'secondary';
       default: return 'default';
     }
   };
@@ -92,6 +103,13 @@ const NewsItem: React.FC<NewsItemProps> = ({
                   color={getSentimentColor(sentiment) as any}
                   size="small"
                   sx={{ height: 20, fontSize: '0.7rem' }}
+                />
+                <Chip
+                  label={newsItemProps.sourceReliabilityTag}
+                  color={getReliabilityColor(newsItemProps.sourceReliabilityTag) as any}
+                  variant="outlined"
+                  size="small"
+                  sx={{ height: 20, fontSize: '0.7rem', textTransform: 'capitalize' }}
                 />
               </Box>
             </Box>

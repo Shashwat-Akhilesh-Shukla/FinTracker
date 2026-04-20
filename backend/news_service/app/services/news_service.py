@@ -114,12 +114,9 @@ class NewsService:
                     # Use current time if parsing fails
                     published_at = datetime.utcnow()
             
-            # Determine source name
-            source_name = source_type.title()
-            if isinstance(article.get('source'), dict):
-                source_name = article['source'].get('name', source_type.title())
-            elif isinstance(article.get('source'), str):
-                source_name = article['source']
+            # Determine reliability
+            reliability_tag = article.get('reliability', 'verified')
+            reliability_score = 1.0 if reliability_tag == 'verified' else 0.8 if reliability_tag == 'standard' else 0.5
             
             # Create article data
             article_data = NewsArticleCreate(
@@ -134,7 +131,9 @@ class NewsService:
                 published_at=published_at,
                 category=category,
                 symbols=symbols,
-                tags=keywords[:10]  # Limit tags
+                tags=keywords[:10],  # Limit tags
+                source_reliability_tag=reliability_tag,
+                source_reliability_score=reliability_score
             )
             
             # Only create if relevance score is decent
@@ -225,7 +224,9 @@ class NewsService:
                     published_at=published_at,
                     category=category,
                     symbols=symbols,
-                    tags=keywords[:10]
+                    tags=keywords[:10],
+                    source_reliability_tag=getattr(entry, 'reliability', 'verified'),
+                    source_reliability_score=1.0 if getattr(entry, 'reliability', 'verified') == 'verified' else 0.5
                 )
                 
                 if relevance_score > 0.2:
@@ -264,6 +265,8 @@ class NewsService:
                 category=article_data.category,
                 symbols=article_data.symbols,
                 tags=article_data.tags,
+                source_reliability_tag=article_data.source_reliability_tag,
+                source_reliability_score=article_data.source_reliability_score,
                 is_featured=(relevance_score > 0.7)  # Auto-feature high relevance articles
             )
             

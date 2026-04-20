@@ -29,6 +29,8 @@ export interface NewsItem {
   sentimentScore: number;
   symbols: string[];
   tags: string[];
+  sourceReliabilityTag: 'verified' | 'community' | 'analysis' | 'standard';
+  sourceReliabilityScore: number;
 }
 
 export interface PredictionResult {

@@ -25,6 +25,8 @@ class NewsArticle(Base):
     sentiment = Column(String, nullable=True)  # positive, negative, neutral
     sentiment_score = Column(Float, nullable=True)  # -1 to 1
     relevance_score = Column(Float, default=0.0)
+    source_reliability_tag = Column(String, default='verified')  # verified, community, analysis
+    source_reliability_score = Column(Float, default=1.0)
     
     # Categorization
     category = Column(String, nullable=True)  # markets, earnings, crypto, etc.

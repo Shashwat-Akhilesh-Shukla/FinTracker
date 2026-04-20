@@ -18,6 +18,8 @@ class NewsArticleCreate(NewsArticleBase):
     category: Optional[str] = None
     symbols: Optional[List[str]] = None
     tags: Optional[List[str]] = None
+    source_reliability_tag: Optional[str] = 'verified'
+    source_reliability_score: Optional[float] = 1.0
 
 class NewsArticleResponse(NewsArticleBase):
     id: int
@@ -30,6 +32,8 @@ class NewsArticleResponse(NewsArticleBase):
     category: Optional[str]
     symbols: Optional[List[str]]
     tags: Optional[List[str]]
+    source_reliability_tag: str
+    source_reliability_score: float
     views: int
     is_featured: bool
     created_at: datetime

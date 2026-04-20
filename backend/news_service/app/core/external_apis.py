@@ -100,23 +100,48 @@ class ExternalNewsAPIs:
         feeds = [
             {
                 "url": "https://feeds.finance.yahoo.com/rss/2.0/headline",
-                "source": "Yahoo Finance"
+                "source": "Yahoo Finance",
+                "reliability": "verified"
             },
             {
                 "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-                "source": "CNBC"
+                "source": "CNBC",
+                "reliability": "verified"
             },
             {
                 "url": "https://www.marketwatch.com/rss/topstories",
-                "source": "MarketWatch"
+                "source": "MarketWatch",
+                "reliability": "verified"
             },
             {
-                "url": "https://feeds.reuters.com/reuters/businessNews",
-                "source": "Reuters Business"
+                "url": "https://www.reutersagency.com/feed/?best-topics=business&format=xml",
+                "source": "Reuters Business",
+                "reliability": "verified"
             },
             {
-                "url": "https://rss.cnn.com/rss/money_latest.rss",
-                "source": "CNN Business"
+                "url": "https://www.reddit.com/r/investing/.rss",
+                "source": "Reddit Investing",
+                "reliability": "community"
+            },
+            {
+                "url": "https://www.reddit.com/r/stocks/.rss",
+                "source": "Reddit Stocks",
+                "reliability": "community"
+            },
+            {
+                "url": "https://www.reddit.com/r/wallstreetbets/.rss",
+                "source": "Reddit WSB",
+                "reliability": "community"
+            },
+            {
+                "url": "https://www.investing.com/rss/news_25.rss",
+                "source": "Investing.com",
+                "reliability": "standard"
+            },
+            {
+                "url": "https://www.forbes.com/business/feed/",
+                "source": "Forbes Business",
+                "reliability": "verified"
             }
         ]
         
@@ -135,6 +160,7 @@ class ExternalNewsAPIs:
                         "summary": entry.get("summary", ""),
                         "url": entry.get("link", ""),
                         "source": feed_info["source"],
+                        "reliability": feed_info["reliability"],
                         "author": entry.get("author", ""),
                         "published": entry.get("published", ""),
                         "content": self._extract_content(entry)
