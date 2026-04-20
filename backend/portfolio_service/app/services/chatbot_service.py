@@ -9,6 +9,8 @@ Chatbot service that:
 from typing import AsyncGenerator, List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from openai import AsyncOpenAI
+import httpx
+import asyncio
 
 from app.models.portfolio import Portfolio
 from app.models.holding import Holding
@@ -111,6 +113,36 @@ def _build_portfolio_context(db: Session, user_id: int) -> str:
     return "\n".join(lines)
 
 
+async def _fetch_news_context(symbols: List[str]) -> str:
+    """Fetch recent news articles for the given symbols from the News Service."""
+    if not symbols:
+        return ""
+
+    try:
+        symbols_str = ",".join(symbols)
+        url = f"{settings.NEWS_SERVICE_URL}/api/v1/news/symbols/{symbols_str}?limit=5"
+        
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(url)
+            if response.status_code != 200:
+                return "Recent news not available."
+            
+            articles = response.json()
+            if not articles:
+                return "No recent news found for your holdings."
+            
+            lines = ["\n=== RECENT NEWS ==="]
+            for art in articles:
+                published = art.get("published_at", "")[:10]
+                sentiment = art.get("sentiment", "N/A")
+                lines.append(f"- [{published}] {art['title']} (Sentiment: {sentiment})")
+            
+            return "\n".join(lines)
+    except Exception as e:
+        print(f"Error fetching news context: {e}")
+        return "Recent news not available."
+
+
 SYSTEM_PROMPT = """You are FinBot, an expert AI financial advisor embedded in the FinTracker portfolio management app.
 
 You have been given the user's real portfolio data from the database. Use this data to answer questions accurately and helpfully.
@@ -138,12 +170,22 @@ async def stream_chat_response(
     # Build portfolio context
     portfolio_context = _build_portfolio_context(db, user_id)
 
+    # Extract symbols for news lookup
+    portfolio = db.query(Portfolio).filter(Portfolio.user_id == user_id).first()
+    symbols = []
+    if portfolio:
+        holdings = db.query(Holding).filter(Holding.portfolio_id == portfolio.id).all()
+        symbols = list(set(h.symbol for h in holdings))
+
+    # Fetch news context in parallel
+    news_context = await _fetch_news_context(symbols)
+
     # Build messages list
     messages: List[Dict[str, Any]] = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {
             "role": "user",
-            "content": f"Here is my current portfolio data:\n\n{portfolio_context}",
+            "content": f"Here is my current portfolio data:\n\n{portfolio_context}\n{news_context}",
         },
         {
             "role": "assistant",
