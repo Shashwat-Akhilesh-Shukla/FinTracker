@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import AppHeader from './AppHeader';
 import Sidebar from './Sidebar';
+import Chatbot from '../common/Chatbot';
 
 const drawerWidth = 260;
 
@@ -65,6 +66,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     {children}
                 </Box>
             </Main>
+            <Chatbot />
         </Box>
     );
 };

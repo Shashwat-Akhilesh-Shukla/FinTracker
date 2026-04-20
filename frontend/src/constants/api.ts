@@ -24,6 +24,9 @@ export const API_ENDPOINTS = {
   QUANT: {
     ANALYTICS: '/quant/analytics',
     BENCHMARK_COMPARISON: '/quant/benchmark-comparison',
+  },
+  CHATBOT: {
+    CHAT: '/portfolio/chat',
   }
 } as const;
 
