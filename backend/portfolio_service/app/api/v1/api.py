@@ -37,6 +37,13 @@ api_router.include_router(
     tags=["chatbot"]
 )
 
+from app.api.v1.endpoints import rebalancing
+api_router.include_router(
+    rebalancing.router,
+    prefix="/rebalance",
+    tags=["rebalancing"]
+)
+
 @api_router.get("/health")
 def health_check():
     return {

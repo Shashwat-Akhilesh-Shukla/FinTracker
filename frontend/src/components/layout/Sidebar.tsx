@@ -90,6 +90,7 @@ const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: ROUTES.DASHBOARD },
     { text: 'Portfolio', icon: <PortfolioIcon />, path: ROUTES.PORTFOLIO },
     { text: 'Analytics', icon: <AnalyticsIcon />, path: ROUTES.ANALYTICS },
+    { text: 'Rebalancing', icon: <TrendingUp />, path: ROUTES.REBALANCE },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {

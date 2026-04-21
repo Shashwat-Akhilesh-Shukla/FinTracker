@@ -19,6 +19,7 @@ import { Login, Register } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
 import { PortfolioPage } from './pages/Portfolio';
 import { Analytics } from './pages/Analytics';
+import { RebalancingPage } from './pages/Portfolio/RebalancingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,6 +68,11 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.ANALYTICS} element={
             <PrivateRoute>
               <Analytics />
+            </PrivateRoute>
+          } />
+          <Route path={ROUTES.REBALANCE} element={
+            <PrivateRoute>
+              <RebalancingPage />
             </PrivateRoute>
           } />
           

@@ -14,6 +14,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   PORTFOLIO: '/portfolio',
   ANALYTICS: '/analytics',
+  REBALANCE: '/rebalance',
   SETTINGS: '/settings',
   PROFILE: '/profile',
 } as const;

@@ -27,6 +27,11 @@ export const API_ENDPOINTS = {
   },
   CHATBOT: {
     CHAT: '/portfolio/chat',
+  },
+  REBALANCE: {
+    GET_TARGETS: '/rebalance/target-allocation',
+    SET_TARGETS: '/rebalance/target-allocation',
+    GET_SUGGESTIONS: '/rebalance/rebalance',
   }
 } as const;
 
