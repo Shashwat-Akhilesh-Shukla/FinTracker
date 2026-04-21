@@ -113,6 +113,32 @@ def _build_portfolio_context(db: Session, user_id: int) -> str:
     return "\n".join(lines)
 
 
+async def _fetch_stress_test_context(user_id: int) -> str:
+    """Fetch stress test scenarios and projected impacts from the Quant Service."""
+    try:
+        url = f"{settings.QUANT_SERVICE_URL}/api/v1/quant/stress-test/{user_id}"
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(url)
+            if response.status_code != 200:
+                return ""
+            
+            data = response.json()
+            lines = ["\n=== MARKET STRESS TEST SCENARIOS ==="]
+            lines.append(f"Overall Portfolio Beta: {data.get('portfolio_beta', 1.0):.2f}")
+            
+            for s in data.get("scenarios", []):
+                lines.append(
+                    f"- {s['scenario_name']} (Drop: -{s['market_drop_pct']}%): "
+                    f"Est. Loss -{s['estimated_portfolio_drop_pct']}% (-${s['estimated_portfolio_drop_value']:,.0f})"
+                )
+            
+            lines.append(f"\nAI Risk Assessment: {data.get('ai_advice', '')}")
+            return "\n".join(lines)
+    except Exception as e:
+        print(f"Error fetching stress test context: {e}")
+        return ""
+
+
 async def _fetch_news_context(symbols: List[str]) -> str:
     """Fetch recent news articles for the given symbols from the News Service."""
     if not symbols:
@@ -177,15 +203,18 @@ async def stream_chat_response(
         holdings = db.query(Holding).filter(Holding.portfolio_id == portfolio.id).all()
         symbols = list(set(h.symbol for h in holdings))
 
-    # Fetch news context in parallel
-    news_context = await _fetch_news_context(symbols)
+    # Fetch context in parallel
+    news_context, stress_context = await asyncio.gather(
+        _fetch_news_context(symbols),
+        _fetch_stress_test_context(user_id)
+    )
 
     # Build messages list
     messages: List[Dict[str, Any]] = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {
             "role": "user",
-            "content": f"Here is my current portfolio data:\n\n{portfolio_context}\n{news_context}",
+            "content": f"Here is my current portfolio data:\n\n{portfolio_context}\n{news_context}\n{stress_context}",
         },
         {
             "role": "assistant",

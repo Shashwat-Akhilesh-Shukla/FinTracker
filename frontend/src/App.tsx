@@ -20,6 +20,7 @@ import { Dashboard } from './pages/Dashboard';
 import { PortfolioPage } from './pages/Portfolio';
 import { Analytics } from './pages/Analytics';
 import { RebalancingPage } from './pages/Portfolio/RebalancingPage';
+import { StressTestingPage } from './pages/Analytics/StressTestingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,6 +74,11 @@ const AppContent: React.FC = () => {
           <Route path={ROUTES.REBALANCE} element={
             <PrivateRoute>
               <RebalancingPage />
+            </PrivateRoute>
+          } />
+          <Route path={ROUTES.STRESS_TEST} element={
+            <PrivateRoute>
+              <StressTestingPage />
             </PrivateRoute>
           } />
           

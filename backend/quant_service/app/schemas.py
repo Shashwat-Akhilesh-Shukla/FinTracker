@@ -41,3 +41,19 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     version: str
+
+class ScenarioImpact(BaseModel):
+    scenario_name: str
+    market_drop_pct: float
+    estimated_portfolio_drop_pct: float
+    estimated_portfolio_drop_value: float
+    remaining_value: float
+    risk_level: str # 'Low', 'Moderate', 'High', 'Extreme'
+
+class StressTestResponse(BaseModel):
+    user_id: int
+    current_value: float
+    portfolio_beta: float
+    scenarios: List[ScenarioImpact]
+    custom_shock_sensitivity: float # % drop per 1% market drop
+    ai_advice: str

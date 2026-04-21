@@ -91,6 +91,7 @@ const menuItems = [
     { text: 'Portfolio', icon: <PortfolioIcon />, path: ROUTES.PORTFOLIO },
     { text: 'Analytics', icon: <AnalyticsIcon />, path: ROUTES.ANALYTICS },
     { text: 'Rebalancing', icon: <TrendingUp />, path: ROUTES.REBALANCE },
+    { text: 'Stress Test', icon: <AnalyticsIcon />, path: ROUTES.STRESS_TEST },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {

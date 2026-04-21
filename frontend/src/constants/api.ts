@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
   QUANT: {
     ANALYTICS: '/quant/analytics',
     BENCHMARK_COMPARISON: '/quant/benchmark-comparison',
+    STRESS_TEST: '/quant/stress-test',
   },
   CHATBOT: {
     CHAT: '/portfolio/chat',

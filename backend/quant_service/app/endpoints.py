@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.analytics import analytics_engine
 from app.benchmarks import benchmark_service
-from app.schemas import AnalyticsResponse, BenchmarkComparison, HealthResponse, BenchmarkData
+from app.stress_test import StressTestService
+from app.schemas import AnalyticsResponse, BenchmarkComparison, HealthResponse, BenchmarkData, StressTestResponse
 from app.models import Portfolio, Transaction, MarketData, SecurityMetadata
 from app.market_data import FinnhubMarketDataService
 from datetime import datetime, timedelta
@@ -253,3 +254,16 @@ async def get_market_data(
         logger.error(f"Error getting market data: {e}")
         # Fallback to DB
         return analytics_engine._get_db_market_data(db, symbol, days)
+
+@router.get("/stress-test/{user_id}", response_model=StressTestResponse)
+async def get_stress_test(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Run market stress testing for the portfolio"""
+    try:
+        return await StressTestService.run_stress_test(db, user_id)
+    except Exception as e:
+        logger.error(f"Stress test failed for user {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Stress test calculation failed: {str(e)}")

@@ -15,6 +15,7 @@ export const ROUTES = {
   PORTFOLIO: '/portfolio',
   ANALYTICS: '/analytics',
   REBALANCE: '/rebalance',
+  STRESS_TEST: '/stress-test',
   SETTINGS: '/settings',
   PROFILE: '/profile',
 } as const;
